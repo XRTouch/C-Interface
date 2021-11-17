@@ -5,7 +5,7 @@
 void GetAngle(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
     v8::Isolate *isolate = args.GetIsolate();
-    args.GetReturnValue().Set(v8::Number::New(isolate, getAngle()));
+    args.GetReturnValue().Set(getAngle());
 }
 
 void SetForce(const v8::FunctionCallbackInfo<v8::Value> &args)
