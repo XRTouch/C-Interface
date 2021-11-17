@@ -1,10 +1,21 @@
 #include <node.h>
 #include <v8.h>
+#include "cissors.hpp"
 
-static void Method(const v8::FunctionCallbackInfo<v8::Value> &args)
+void GetAngle(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
     v8::Isolate *isolate = args.GetIsolate();
-    args.GetReturnValue().Set(v8::String::NewFromUtf8(isolate, "world").ToLocalChecked());
+    args.GetReturnValue().Set(v8::Number::New(isolate, getAngle()));
+}
+
+void SetForce(const v8::FunctionCallbackInfo<v8::Value> &args)
+{
+    v8::Isolate *isolate = args.GetIsolate();
+    if (args.Length() < 1) return;
+    if (!args[0]->IsNumber()) return;
+    double forceAmount = 0;
+    forceAmount = args[0]->NumberValue(isolate->GetCurrentContext()).FromMaybe(forceAmount);
+    setForce(forceAmount);
 }
 
 // Not using the full NODE_MODULE_INIT() macro here because we want to test the
@@ -12,14 +23,13 @@ static void Method(const v8::FunctionCallbackInfo<v8::Value> &args)
 extern "C" NODE_MODULE_EXPORT void
 NODE_MODULE_INITIALIZER(v8::Local<v8::Object> exports, v8::Local<v8::Value> module, v8::Local<v8::Context> context)
 {
-    NODE_SET_METHOD(exports, "hello", Method);
+    NODE_SET_METHOD(exports, "setForce", SetForce);
+    NODE_SET_METHOD(exports, "getAngle", GetAngle);
 }
 
-static void FakeInit(v8::Local<v8::Object> exports, v8::Local<v8::Value> module, v8::Local<v8::Context> context)
+static void Init(v8::Local<v8::Object> exports, v8::Local<v8::Value> module, v8::Local<v8::Context> context)
 {
-    auto isolate = context->GetIsolate();
-    auto exception = v8::Exception::Error(v8::String::NewFromUtf8(isolate, "FakeInit should never run!").ToLocalChecked());
-    isolate->ThrowException(exception);
+    
 }
 
 // Define a Node.js module, but with the wrong version. Node.js should still be
@@ -27,4 +37,4 @@ static void FakeInit(v8::Local<v8::Object> exports, v8::Local<v8::Value> module,
 // specially named initializer above.
 #undef NODE_MODULE_VERSION
 #define NODE_MODULE_VERSION 3
-NODE_MODULE(NODE_GYP_MODULE_NAME, FakeInit)
+NODE_MODULE(NODE_GYP_MODULE_NAME, Init)
