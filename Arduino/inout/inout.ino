@@ -11,6 +11,8 @@ void setup()
   Serial.begin(9600);
   serv.attach(3);
   pinMode(PINPOT, INPUT);
+  servPos = 30;
+  serv.write(servPos);
 }
 
 void loop()
@@ -22,6 +24,7 @@ void loop()
   }
   lastVal = potVal;
   potVal = map(analogRead(PINPOT), 0, 1024, 0, 255);
+  potVal = (potVal-19)*2.61;
   if (lastVal != potVal)
   {
     Serial.write(potVal);
