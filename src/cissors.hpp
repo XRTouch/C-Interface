@@ -10,12 +10,18 @@ std::thread serial_thread;
 bool serial_modified = true;
 unsigned char cissorPos = 0;
 unsigned char cissorForce = 0;
+double cissorMovement = 0;
 
 void setForce(double amount)
 {
     cissorForce = amount;
     serial_modified = true;
     return;
+}
+
+double getMovement()
+{
+    return cissorMovement;
 }
 
 double getAngle()
@@ -35,8 +41,14 @@ void serial_startConnection()
             serial_modified = false;
             serial_connection.writeBytes(&cissorForce, 1);
         }
-        serial_connection.readBytes(&cissorPos, 1, 25, 0);
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        unsigned char state = 0;
+        serial_connection.readBytes(&state, 1, 15, 0);
+        if (state <= 40)
+        {
+            cissorMovement = state - 20;
+        } else cissorPos = state;
+        
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
 

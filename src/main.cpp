@@ -8,6 +8,12 @@ void GetAngle(const v8::FunctionCallbackInfo<v8::Value> &args)
     args.GetReturnValue().Set(getAngle());
 }
 
+void GetMovement(const v8::FunctionCallbackInfo<v8::Value> &args)
+{
+    v8::Isolate *isolate = args.GetIsolate();
+    args.GetReturnValue().Set(getMovement());
+}
+
 void SetForce(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
     v8::Isolate *isolate = args.GetIsolate();
@@ -39,6 +45,7 @@ NODE_MODULE_INITIALIZER(v8::Local<v8::Object> exports, v8::Local<v8::Value> modu
 {
     NODE_SET_METHOD(exports, "setForce", SetForce);
     NODE_SET_METHOD(exports, "getAngle", GetAngle);
+    NODE_SET_METHOD(exports, "getMovement", GetMovement);
     NODE_SET_METHOD(exports, "init", Init);
     NODE_SET_METHOD(exports, "close", Close);
 }

@@ -1,8 +1,13 @@
+const process = require("process");
 const addon = require("./build/Release/cppInterface")
 
-console.log("wesh");
-console.log(addon.init("COM5"));
-console.log(addon.getAngle());
-console.log(addon.setForce(6.21));
-console.log(addon.close());
-console.log("fin");
+addon.init("COM3");
+addon.setForce(50);
+
+while (true) {
+    val = addon.getMovement() + 20;
+    for (let i = 0; i < 40-val; i++) {
+        process.stdout.write(" ");
+    }
+    console.log("+");
+}
