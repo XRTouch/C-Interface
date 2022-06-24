@@ -42,11 +42,12 @@ void serial_startConnection()
             serial_connection.writeBytes(&cissorForce, 1);
         }
         unsigned char state = 0;
-        serial_connection.readBytes(&state, 1, 15, 0);
-        if (state <= 40)
+        serial_connection.readBytes(&state, 1, 5, 0);
+        if (state <= 174)
         {
-            cissorMovement = state - 20;
-        } else cissorPos = state;
+            double res = (state - 87) / 87.0;
+            cissorMovement = (res == -1) ? cissorMovement : res;
+        } else cissorPos = state - 176;
         
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }

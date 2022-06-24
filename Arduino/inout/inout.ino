@@ -2,7 +2,7 @@
 #include <Wire.h>
 #include <Adafruit_MMA8451.h>
 #include <Adafruit_Sensor.h>
-#define PINPOT A0
+#define PINPOT A1
 
 Servo serv;
 unsigned char servPos;
@@ -28,7 +28,7 @@ void loop()
   // read x axis on accelerometer and convert to a 0-255 number
   mma.read();
   // send values between 0 and 40 for accelerometer
-  int val = min(max(mma.x, -4000), 4000) / 200 + 20;
+  int val = min(max(mma.x, -4000), 4000) / 46 + 87;
   Serial.write(val);
 
   if (Serial.available())
@@ -52,8 +52,8 @@ void loop()
   potVal = (potVal-19)*2.61;
   if (lastVal != potVal)
   {
-    Serial.write(potVal);
+    Serial.write(min(max(potVal, 41), 120)+135);
     lastVal = potVal;
   }
-  delay(20);
+  delay(30);
 }
